@@ -17,6 +17,14 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.usfirst.frc6468.cubeMover2001.commands.*;
 import org.usfirst.frc6468.cubeMover2001.subsystems.*;
+/**
+ * This function is run when the robot is first started up and should be
+ * used for any initialization code.
+ * 
+ * @version 1.0
+ * @author Will English
+ * 
+ */
 
 /**
  * The VM is configured to automatically run this class, and to call the
