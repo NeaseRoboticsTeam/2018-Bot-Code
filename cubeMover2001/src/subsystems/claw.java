@@ -9,7 +9,7 @@
 // it from being updated in the future.
 
 
-package org.usfirst.frc6468.cubeMover2001.subsystems;
+package src.org.usfirst.frc6468.cubeMover2001.subsystems;
 
 import org.usfirst.frc6468.cubeMover2001.RobotMap;
 import org.usfirst.frc6468.cubeMover2001.commands.*;
