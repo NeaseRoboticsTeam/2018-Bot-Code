@@ -28,11 +28,11 @@ import edu.wpi.first.wpilibj.buttons.*;
  *@author Aditya 
  */
 public class OI {
-	
+	Joystick joystick = new Joystick(1);
+	XboxController gamePad = new XboxController(0);
     public OI() {
     	
-    	Joystick joystick = new Joystick(1);
-    	XboxController gamePad = new XboxController(0);
+    
  
 
         double LStickY = gamePad.getY();

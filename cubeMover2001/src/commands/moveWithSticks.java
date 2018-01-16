@@ -9,9 +9,9 @@
 // it from being updated in the future.
 
 
-package org.usfirst.frc6468.cubeMover2001.commands;
+package src.org.usfirst.frc6468.cubeMover2001.commands;
 import edu.wpi.first.wpilibj.command.Command;
-import org.usfirst.frc6468.cubeMover2001.Robot;
+import src.org.usfirst.frc6468.cubeMover2001.Robot;
 
 /**
  *

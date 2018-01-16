@@ -33,6 +33,8 @@ import src.org.usfirst.frc6468.cubeMover2001.subsystems.*;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
+@SuppressWarnings("deprecation")
+
 public class Robot extends IterativeRobot {
 
     Command autonomousCommand;
@@ -113,6 +115,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
-        LiveWindow.run();
+       
+    	LiveWindow.run();
     }
 }
