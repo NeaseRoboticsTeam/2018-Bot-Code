@@ -11,7 +11,7 @@
 
 package src.org.usfirst.frc6468.cubeMover2001.commands;
 import edu.wpi.first.wpilibj.command.Command;
-import src.org.usfirst.frc6468.cubeMover2001.Robot;
+import src.org.usfirst.frc6468.cubeMover2001.robot.Robot;
 
 /**
  *

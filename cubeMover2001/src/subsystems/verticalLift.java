@@ -11,8 +11,8 @@
 
 package src.org.usfirst.frc6468.cubeMover2001.subsystems;
 
-import src.org.usfirst.frc6468.cubeMover2001.RobotMap;
 import src.org.usfirst.frc6468.cubeMover2001.commands.*;
+import src.org.usfirst.frc6468.cubeMover2001.robot.RobotMap;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
 

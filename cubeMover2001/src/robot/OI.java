@@ -10,7 +10,7 @@
 
 
 
-package src.org.usfirst.frc6468.cubeMover2001;
+package src.org.usfirst.frc6468.cubeMover2001.robot;
 
 import src.org.usfirst.frc6468.cubeMover2001.commands.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

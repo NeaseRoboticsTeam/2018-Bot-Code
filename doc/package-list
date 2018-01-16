@@ -1,3 +1,3 @@
-org.usfirst.frc.team6468.robot
-org.usfirst.frc.team6468.robot.commands
-org.usfirst.frc.team6468.robot.subsystems
+src.org.usfirst.frc6468.cubeMover2001.commands
+src.org.usfirst.frc6468.cubeMover2001.robot
+src.org.usfirst.frc6468.cubeMover2001.subsystems
