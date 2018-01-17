@@ -40,7 +40,7 @@ public class OI {
         boolean leftBump = gamePad.getBumper(GenericHID.Hand.kRight);
         boolean joyTrig = joystick.getTrigger();
         boolean pressed = true;
-    	
+    	boolean released = false;
     	
     	new JoystickButton(joystick, 3).whenPressed(new climb());
         if(LStickY != 0) new driveStraight();
@@ -48,7 +48,8 @@ public class OI {
         if(leftBump == pressed) new slideLeft();
         if(joystick.getY() > 0) new liftUp();  
         if(joystick.getY() < 0) new dropDown();
-        if(joyTrig == pressed)
+        if(joyTrig == pressed) new closeClaw();
+        if(joyTrig == released) new openClaw();
 
         
         // SmartDashboard Buttons
