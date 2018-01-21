@@ -14,14 +14,10 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.*;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.Spark;
-//^^delete later
 import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
-
+import com.ctre.phoenix.motorcontrol.can.*;
 public class Robot extends IterativeRobot {
 	private static final String kDefaultAuto = "Default";
 	private static final String kCustomAuto = "My Auto";
@@ -31,23 +27,22 @@ public class Robot extends IterativeRobot {
 	private Joystick joy = new Joystick(1);
 	private JoystickButton button1 = new JoystickButton(joy, 1);
 	   
-	//change sparks to talons
-	private Spark FLM = new Spark(1);
-	private Spark BLM = new Spark(2);
-	private SpeedControllerGroup leftSide = new SpeedControllerGroup(FLM, BLM);
-	private Spark FRM = new Spark(3);
-	private Spark BRM = new Spark(4);
-	private SpeedControllerGroup rightSide = new SpeedControllerGroup(FRM, BRM);
-	private DifferentialDrive driveBoi = new DifferentialDrive(leftSide, rightSide);
+
 	
-	
+	WPI_TalonSRX _leftSlave1 = new WPI_TalonSRX(11);
+	WPI_TalonSRX _rightSlave1 = new WPI_TalonSRX(12);
+	WPI_TalonSRX _frontLeftMotor = new WPI_TalonSRX(13); 
+	WPI_TalonSRX _frontRightMotor = new WPI_TalonSRX(14);
+	DifferentialDrive _drive = new DifferentialDrive(_frontLeftMotor, _frontRightMotor);
+
 	
 	@Override
 	public void robotInit() {
 		m_chooser.addDefault("Default Auto", kDefaultAuto);
 		m_chooser.addObject("My Auto", kCustomAuto);
 		SmartDashboard.putData("Auto choices", m_chooser);
-
+		_rightSlave1.follow(_frontRightMotor);
+    		_leftSlave1.follow(_frontLeftMotor);
 	}
 
 	/**
@@ -92,7 +87,7 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		double RStickX = gamePad.getX(GenericHID.Hand.kRight);
 		double LStickY = gamePad.getY(GenericHID.Hand.kLeft);
-		driveBoi.arcadeDrive(LStickY, RStickX, true);
+		_drive.arcadeDrive(LStickY, RStickX);
 		
 	}
 
