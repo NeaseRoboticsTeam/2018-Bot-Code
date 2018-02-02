@@ -117,7 +117,8 @@ public class Robot extends IterativeRobot {
 		
 		//Sliding Drive Train
 		if(RTrigger != 0 && LTrigger == 0) _slideTrainMotor.set(RTrigger);
-		if(LTrigger != 0 && RTrigger == 0) _slideTrainMotor.set(LTrigger);
+		if(LTrigger != 0 && RTrigger == 0) _slideTrainMotor.set(-LTrigger);
+		if(RTrigger == 0 && LTrigger == 0) _slideTrainMotor.set(0);
 		
 		//Claw
 		int D;
