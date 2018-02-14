@@ -10,11 +10,14 @@ package org.usfirst.frc.team6468.robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.*;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.Timer;
+
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 import com.ctre.phoenix.motorcontrol.can.*;
@@ -23,18 +26,20 @@ public class Robot extends IterativeRobot {
 	private static final String kCustomAuto = "My Auto";
 	private String m_autoSelected;
 	private SendableChooser<String> m_chooser = new SendableChooser<>();
-	private XboxController  gamePad = new XboxController(0);
-	private Joystick joy = new Joystick(1);
+	private XboxController  gamePad = new XboxController(1);
+	private Joystick joy = new Joystick(0);
 	private JoystickButton button1 = new JoystickButton(joy, 1);
-	   
-
-	
-	WPI_TalonSRX _leftSlave1 = new WPI_TalonSRX(11);
-	WPI_TalonSRX _rightSlave1 = new WPI_TalonSRX(12);
-	WPI_TalonSRX _frontLeftMotor = new WPI_TalonSRX(13); 
-	WPI_TalonSRX _frontRightMotor = new WPI_TalonSRX(14);
+	private JoystickButton button2 = new JoystickButton(joy, 2);
+	private Servo claw = new Servo(1);
+	WPI_TalonSRX _verticalMotor = new WPI_TalonSRX(6);
+	WPI_TalonSRX _middleMotor = new WPI_TalonSRX(5);
+	WPI_TalonSRX _leftSlave1 = new WPI_TalonSRX(1);
+	WPI_TalonSRX _rightSlave1 = new WPI_TalonSRX(4);
+	WPI_TalonSRX _frontLeftMotor = new WPI_TalonSRX(2); 
+	WPI_TalonSRX _frontRightMotor = new WPI_TalonSRX(3);
 	DifferentialDrive _drive = new DifferentialDrive(_frontLeftMotor, _frontRightMotor);
-
+	private Timer timer = new Timer();
+	DigitalInput microSwitch = new DigitalInput(1);
 	
 	@Override
 	public void robotInit() {
@@ -42,7 +47,7 @@ public class Robot extends IterativeRobot {
 		m_chooser.addObject("My Auto", kCustomAuto);
 		SmartDashboard.putData("Auto choices", m_chooser);
 		_rightSlave1.follow(_frontRightMotor);
-    		_leftSlave1.follow(_frontLeftMotor);
+    	_leftSlave1.follow(_frontLeftMotor);
 	}
 
 	/**
@@ -69,6 +74,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		
 		switch (m_autoSelected) {
 			case kCustomAuto:
 				// Put custom auto code here
@@ -85,9 +91,53 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		
+		double clawDeg = claw.getAngle();
+		double RTrig = gamePad.getTriggerAxis(GenericHID.Hand.kRight);
+		double LTrig = gamePad.getTriggerAxis(GenericHID.Hand.kLeft);
 		double RStickX = gamePad.getX(GenericHID.Hand.kRight);
-		double LStickY = gamePad.getY(GenericHID.Hand.kLeft);
+		double LStickY = -gamePad.getY(GenericHID.Hand.kLeft);
+		boolean RBump = gamePad.getBumper(GenericHID.Hand.kRight);
+		boolean LBump = gamePad.getBumper(GenericHID.Hand.kLeft);
+		double joyY = joy.getY();
+		boolean joyTrig = joy.getRawButton(1);
+		boolean joyButton = joy.getRawButton(2);
+		boolean switchState = microSwitch.get();
+		if(switchState == true && joyY < 0) _verticalMotor.set(0); 
+		if(RBump == true && LBump == false) _middleMotor.set(.5);
+		else if(RBump == false && LBump == true) _middleMotor.set(-.5);
+		else _middleMotor.set(0);
 		_drive.arcadeDrive(LStickY, RStickX);
+		if(RBump==true) _frontLeftMotor.set(0);
+		System.out.println(_frontLeftMotor.get());
+		
+	
+		
+		if(joyY != 0) _verticalMotor.set(joyY);
+		else _verticalMotor.set(0);
+		
+		if(microSwitch.get() == true) {
+             System.out.println("Recieved micro switch input");
+         }
+		else System.out.println("not pressed");
+
+		
+		for(double x = clawDeg; joyTrig == true && x < 180; x++) {
+		    System.out.println("+++++++++++++++");
+			System.out.println(joyTrig+" "+x);
+			claw.setAngle(x);
+			clawDeg = x;
+		}
+		for(double x = clawDeg; joyButton == true && x > 0; x--) {
+			System.out.println("--------------");
+			System.out.println(joyButton+" "+x);
+			claw.setAngle(x);
+			clawDeg = x;
+		}
+			
+		
+
+		
 		
 	}
 
