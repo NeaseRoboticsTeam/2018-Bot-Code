@@ -23,14 +23,15 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.ctre.phoenix.motorcontrol.can.*;
 public class Robot extends IterativeRobot {
 	private static final String kDefaultAuto = "Default";
-	private static final String kCustomAuto = "My Auto";
+	private static final String kLeftAuto = "Left Auto";
 	private String m_autoSelected;
 	private SendableChooser<String> m_chooser = new SendableChooser<>();
 	private XboxController  gamePad = new XboxController(1);
 	private Joystick joy = new Joystick(0);
 	private JoystickButton button1 = new JoystickButton(joy, 1);
 	private JoystickButton button2 = new JoystickButton(joy, 2);
-	private Servo claw = new Servo(1);
+	private Servo clawLeft = new Servo(1);
+	private Servo clawRight = new Servo(0);
 	WPI_TalonSRX _verticalMotor = new WPI_TalonSRX(6);
 	WPI_TalonSRX _middleMotor = new WPI_TalonSRX(5);
 	WPI_TalonSRX _leftSlave1 = new WPI_TalonSRX(1);
@@ -38,18 +39,44 @@ public class Robot extends IterativeRobot {
 	WPI_TalonSRX _frontLeftMotor = new WPI_TalonSRX(2); 
 	WPI_TalonSRX _frontRightMotor = new WPI_TalonSRX(3);
 	DifferentialDrive _drive = new DifferentialDrive(_frontLeftMotor, _frontRightMotor);
+
 	private Timer timer = new Timer();
-	DigitalInput microSwitch = new DigitalInput(1);
+	DigitalInput microSwitch = new DigitalInput(0);
 	
 	@Override
-	public void robotInit() {
+	public void robotInit() 
+	{
 		m_chooser.addDefault("Default Auto", kDefaultAuto);
-		m_chooser.addObject("My Auto", kCustomAuto);
+		m_chooser.addObject("Left Side, kLeftAuto);
 		SmartDashboard.putData("Auto choices", m_chooser);
 		_rightSlave1.follow(_frontRightMotor);
-    	_leftSlave1.follow(_frontLeftMotor);
+    		_leftSlave1.follow(_frontLeftMotor);
 	}
 
+	public void closeClaw()
+	{
+		clawLeft.setAngle(0);
+		clawRight.setAngle(180);
+	}
+	
+	public void driveForward(double time)
+	{
+		_drive.tankDrive(.5, .5);
+		Thread.sleep(time);		    
+		_drive.tankDrive(0, 0);
+	}
+		public void turnLeft()
+	{
+		_drive.tankDrive(.5, .5);
+		Thread.sleep(time);		    
+		_drive.tankDrive(0, 0);
+	}
+				    
+	public void openClaw()
+	{
+		clawLeft.setAngle(180);
+		clawRight.setAngle(0);
+	}
 	/**
 	 * This autonomous (along with the chooser code above) shows how to select
 	 * between different autonomous modes using the dashboard. The sendable
@@ -62,7 +89,8 @@ public class Robot extends IterativeRobot {
 	 * SendableChooser make sure to add them to the chooser code above as well.
 	 */
 	@Override
-	public void autonomousInit() {
+	public void autonomousInit() 
+	{
 		m_autoSelected = m_chooser.getSelected();
 		// autoSelected = SmartDashboard.getString("Auto Selector",
 		// defaultAuto);
@@ -73,11 +101,17 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during autonomous.
 	 */
 	@Override
-	public void autonomousPeriodic() {
+	public void autonomousPeriodic() 
+	{
 		
-		switch (m_autoSelected) {
-			case kCustomAuto:
-				// Put custom auto code here
+		switch (m_autoSelected) 
+		{
+			case kLeftAuto:
+				_drive.tankDrive(.5, .5);
+				Thread.sleep(1000);
+				
+				
+
 				break;
 			case kDefaultAuto:
 			default:
@@ -90,7 +124,8 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control.
 	 */
 	@Override
-	public void teleopPeriodic() {
+	public void teleopPeriodic() 
+	{
 		
 		double clawDeg = claw.getAngle();
 		double RTrig = gamePad.getTriggerAxis(GenericHID.Hand.kRight);
@@ -116,24 +151,10 @@ public class Robot extends IterativeRobot {
 		if(joyY != 0) _verticalMotor.set(joyY);
 		else _verticalMotor.set(0);
 		
-		if(microSwitch.get() == true) {
-             System.out.println("Recieved micro switch input");
-         }
-		else System.out.println("not pressed");
+		if(microSwitch.get() == true) 
 
-		
-		for(double x = clawDeg; joyTrig == true && x < 180; x++) {
-		    System.out.println("+++++++++++++++");
-			System.out.println(joyTrig+" "+x);
-			claw.setAngle(x);
-			clawDeg = x;
-		}
-		for(double x = clawDeg; joyButton == true && x > 0; x--) {
-			System.out.println("--------------");
-			System.out.println(joyButton+" "+x);
-			claw.setAngle(x);
-			clawDeg = x;
-		}
+		if(joyTrig == true) 
+
 			
 		
 
@@ -145,6 +166,7 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during test mode.
 	 */
 	@Override
-	public void testPeriodic() {
+	public void testPeriodic() 
+	{
 	}
 }
